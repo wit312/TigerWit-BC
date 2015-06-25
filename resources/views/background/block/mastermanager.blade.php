@@ -19,8 +19,8 @@
                                 $("#Tb").find("tr").remove();
                                 var index=0;
                             　　for(var model in e){
-                                ++index;
-                                $("#Tb").append('<tr> <td>'+index+'</td> <td>'+e[model]["type"]+'</td>  <td><a href="#" onclick="Edit('+e[model]["mt4_id"]+')" class="btn btn-secondary btn-sm btn-icon icon-left">Edit</a> <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
+                                ++index;      
+                                $("#Tb").append('<tr> <td>'+index+'</td> <td>'+e[model]["mt4_id"]+'</td> <td>'+e[model]["username"]+'</td> <td>'+e[model]["six_rate"]+'</td><td>'+e[model]["win"]+'</td><td>'+e[model]["lose"]+'</td><td>'+e[model]["volunm"]+'</td>  <td><a href="#" onclick="Edit('+e[model]["mt4_id"]+')" class="btn btn-secondary btn-sm btn-icon icon-left">Edit</a> <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
                                 }
                         }
             }

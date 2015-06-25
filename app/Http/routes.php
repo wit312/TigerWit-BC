@@ -27,7 +27,21 @@ Route::get('/mastermanager','BackGroundController@mastermanager');
 
 
 Route::get('/test',function(){
-phpinfo();
+//$context = new ZMQContext();
+// Connect to task ventilator
+//$sender = new ZMQSocket($context, ZMQ::SOCKET_REQ);
+//$sender->connect("tcp://169.54.231.244:1990");
+//var_dump(111);
+//$sender->send("{'mt4UserID':500001,'__api':'Equity'}");
+//var_dump($sender->recv());
+    //当前时间 
+    $now=date('Y-m-d H:i:s'); 
+    //6月前
+    $before=date('Y-m-d H:i:s',strtotime('-6 month')); 
+    var_dump($now);
+    var_dump($before);
+    $model=DB::select('select (select sum(profit+`storage`) as p from tiger.history where mt4_id=? and profit+`storage`>0 and `timestamp` between ? and ?)/(select amount from tiger.payment where mt4_id=?)', [82367330,$before,$now,82367330]); //6个月盈利率 
+    var_dump($model);
 });
 
 Route::get('/unwrap_phone',function(){
@@ -107,10 +121,18 @@ Route::get('/RemoveMasterList', function () {
 Route::get('/GetMasterTypeList',function(){
     $data = DB::select('select * from tiger.master_new');
     if($data!=null) {
+            //当前时间 
+            $now=date('Y-m-d H:i:s'); 
+            //6月前
+            $before=date('Y-m-d H:i:s',strtotime('-6 month')); 
         foreach($data as $model){
             $temp=DB::select('select * from tiger.user where mt4_real=?', [ $model->mt4_id]);
             $model->name=$temp[0]->username;
             $model->type=TypeToName($model->type);
+            $model->six_rate=DB::select('select (select sum(profit+`storage`) as p from history where mt4_id=? and profit+`storage`>0 and timestamp between ? and ?)/(select amount from payment where mt4_id=?) as money', [ $model->mt4_id,$before,$now,$model->mt4_id])[0]->money; //6个月盈利率 
+            $model->win=0.00;
+            $model->lose=0.00;
+            $model->volunm=0.00;
         }
     }
     return $data;
@@ -172,6 +194,4 @@ function TypeToName($type)
             }
             return $type;
         }
-
-
 
