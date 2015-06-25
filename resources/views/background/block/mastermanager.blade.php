@@ -8,6 +8,34 @@
                     // Adding Custom Scrollbar
                     $(this).data('selectBoxSelectBoxIt').list.perfectScrollbar();
                 });
+              $("#btn_click").click(function() {
+                  //mail,phone,mt4_id
+                  var mail=$("#mail").val();
+                  var phone=$("#phone").val();
+                  var mt4_id=$("#mt4_id").val();
+                  var data=null;
+                  if (mail!=null && mail !=undefind) {
+                    data=mail;
+                  }else if(phone!=null && phone !=undefind)
+                  {
+                    data=phone;
+                  }else{
+                    data=mt4_id;
+                  }
+                  $.ajax({
+                        type: 'GET',
+                        url: '/AddMaster',
+                        data:{data:data},
+                        success: function (e) {
+                                if (e=='true') {
+                                    Myalert('modal-5','操作成功！'); 
+                                    reload();
+                                }else{
+                                    Myalert('modal-5','操作失败！'); 
+                                }
+                        }
+                  });
+              });
         });
          function Reload() {
         $.ajax({
@@ -111,19 +139,19 @@
                             <form role="form" class="form-inline">
                                 
                                 <div class="form-group">
-                                    <input type="text" class="form-control" size="25" placeholder="邮箱">
+                                    <input type="text" id="mail" class="form-control" size="25" placeholder="邮箱">
                                 </div>
                                 
                                 <div class="form-group">
-                                    <input type="password" class="form-control" size="25" placeholder="手机">
+                                    <input type="password" id="phone" class="form-control" size="25" placeholder="手机">
                                 </div>
                                 
                                  <div class="form-group">
-                                    <input type="password" class="form-control" size="25" placeholder="MT4 ID">
+                                    <input type="password" id="mt4_id" class="form-control" size="25" placeholder="MT4 ID">
                                 </div>
 
                                 <div class="form-group">
-                                    <button class="btn btn-secondary btn-single"> 添 加 </button>
+                                    <button id="btn_click" class="btn btn-secondary btn-single"> 添 加 </button>
                                 </div>
                                 
                             </form>
