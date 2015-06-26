@@ -14,9 +14,9 @@
                   var phone=$("#phone").val();
                   var mt4_id=$("#mt4_id").val();
                   var data=null;
-                  if (mail!=null && mail !=undefind) {
+                  if (mail!="" && mail !=undefined) {
                     data=mail;
-                  }else if(phone!=null && phone !=undefind)
+                  }else if(phone!="" && phone !=undefined)
                   {
                     data=phone;
                   }else{
@@ -29,7 +29,7 @@
                         success: function (e) {
                                 if (e=='true') {
                                     Myalert('modal-5','操作成功！'); 
-                                    reload();
+                                    Reload();
                                 }else{
                                     Myalert('modal-5','操作失败！'); 
                                 }
@@ -37,6 +37,8 @@
                   });
               });
         });
+
+
          function Reload() {
         $.ajax({
             type: 'GET',
@@ -45,10 +47,17 @@
                if(e!=null){
                                 //先清空
                                 $("#Tb").find("tr").remove();
-                                var index=0;
+                                $("#Tb_1").find("tr").remove();
+                                var tbindex=0;
+                                var tb1index=0;
                             　　for(var model in e){
-                                ++index;      
-                                $("#Tb").append('<tr> <td>'+index+'</td> <td>'+e[model]["mt4_id"]+'</td> <td>'+e[model]["username"]+'</td> <td>'+e[model]["six_rate"]+'</td><td>'+e[model]["win"]+'</td><td>'+e[model]["lose"]+'</td><td>'+e[model]["volunm"]+'</td>  <td><a href="#" onclick="Edit('+e[model]["mt4_id"]+')" class="btn btn-secondary btn-sm btn-icon icon-left">Edit</a> <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
+                                    if (e[model]["status"]==0) {
+                                        ++tbindex;      
+                                    $("#Tb").append('<tr> <td>'+tbindex+'</td> <td>'+e[model]["mt4_id"]+'</td> <td>'+e[model]["username"]+'</td> <td>'+e[model]["six_rate"]+'</td><td>'+e[model]["win"]+'</td><td>'+e[model]["lose"]+'</td><td>'+e[model]["volunm"]+'</td>  <td><a href="#" onclick="Edit('+e[model]["mt4_id"]+')" class="btn btn-secondary btn-sm btn-icon icon-left">Edit</a> <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
+                                    }else if(e[model]["status"]==1){
+                                        ++tb1index;      
+                                    $("#Tb_1").append('<tr> <td>'+tb1index+'</td> <td>'+e[model]["mt4_id"]+'</td> <td>'+e[model]["username"]+'</td> <td>'+e[model]["six_rate"]+'</td><td>'+e[model]["win"]+'</td><td>'+e[model]["lose"]+'</td><td>'+e[model]["volunm"]+'</td>   <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
+                                    }
                                 }
                         }
             }
@@ -143,11 +152,11 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <input type="password" id="phone" class="form-control" size="25" placeholder="手机">
+                                    <input type="text" id="phone" class="form-control" size="25" placeholder="手机">
                                 </div>
                                 
                                  <div class="form-group">
-                                    <input type="password" id="mt4_id" class="form-control" size="25" placeholder="MT4 ID">
+                                    <input type="text" id="mt4_id" class="form-control" size="25" placeholder="MT4 ID">
                                 </div>
 
                                 <div class="form-group">
@@ -168,13 +177,13 @@
                                     <li class="active">
                                         <a href="#web" data-toggle="tab">
                                             <i class="fa-globe visible-xs"></i>
-                                            <span class="hidden-xs">高手审核榜</span>
+                                            <span class="hidden-xs">高手排行榜</span>
                                         </a>
                                     </li>
                                     <li class="">
                                         <a href="#images" data-toggle="tab">
                                             <i class="fa-picture visible-xs"></i>
-                                            <span class="hidden-xs">高手排行榜</span>
+                                            <span class="hidden-xs">高手审核榜</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -238,7 +247,58 @@
                                     
                                     <!-- Search Results Tab -->
                                     <div class="tab-pane" id="images">
-                                        Search results about images...
+                                       <div class="tab-pane active" id="web">
+                                        
+                                         <div class="panel panel-color panel-white"><!-- Add class "collapsed" to minimize the panel -->
+        <div class="panel-heading">
+            <h3 class="panel-title"><strong>待审核高手列表</strong></h3>
+
+            <div class="panel-options">
+                <a href="#">
+                    <i class="linecons-cog"></i>
+                </a>
+
+                <a href="#" data-toggle="panel">
+                    <span class="collapse-icon">–</span>
+                    <span class="expand-icon">+</span>
+                </a>
+
+                <a href="#" data-toggle="reload">
+                    <i class="fa-rotate-right"></i>
+                </a>
+
+                <a href="#" data-toggle="remove">
+                    ×
+                </a>
+            </div>
+        </div>
+
+        <div class="panel-body">
+
+            <table class="table table-model-2 table-hover" id="example-3">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>MT4账号</th>
+                    <th>昵称</th>
+                    <th>近6个月盈利率</th>
+                    <th>盈利率占比</th>
+                    <th>亏损占比</th>
+                    <th>账户总额</th>
+                </tr>
+                </thead>
+
+                <tbody id="Tb_1">
+
+                </tbody>
+            </table>
+            <div class="row"><div class="col-xs-6"><div class="dataTables_info" id="example-2_info" role="status" aria-live="polite">Showing 1 to 10 of 60 entries</div></div><div class="col-xs-6"><div class="dataTables_paginate paging_simple_numbers" id="example-2_paginate"><ul class="pagination"><li class="paginate_button previous disabled" aria-controls="example-2" tabindex="0" id="example-2_previous"><a href="#">Previous</a></li><li class="paginate_button active" aria-controls="example-2" tabindex="0"><a href="#">1</a></li><li class="paginate_button " aria-controls="example-2" tabindex="0"><a href="#">2</a></li><li class="paginate_button " aria-controls="example-2" tabindex="0"><a href="#">3</a></li><li class="paginate_button " aria-controls="example-2" tabindex="0"><a href="#">4</a></li><li class="paginate_button " aria-controls="example-2" tabindex="0"><a href="#">5</a></li><li class="paginate_button " aria-controls="example-2" tabindex="0"><a href="#">6</a></li><li class="paginate_button next" aria-controls="example-2" tabindex="0" id="example-2_next"><a href="#">Next</a></li></ul></div></div></div>
+
+
+        </div>
+    </div>
+                                        
+                                    </div>
                                     </div>
                                     
                                 </div>

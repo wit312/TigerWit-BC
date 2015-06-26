@@ -134,8 +134,15 @@ Route::get('/GetMasterTypeList',function(){
             if ($total==null) {
                 $model->win=0.00;
             }
-            $t=$w[0]->count/$total[0]->count*100;
-            $model->win=number_format($w[0]->count/$total[0]->count*100,2);
+            $t=0;
+            if ($total[0]->count!=0) {
+                 $t=$w[0]->count/$total[0]->count*100;
+            }
+            if ($total[0]->count!=0) {
+                $model->win=number_format($w[0]->count/$total[0]->count*100,2);
+            }else{
+                $model->win=0;
+            }
             $model->lose=number_format(100.00-$t,2);
             $context = new ZMQContext();
             $sender = new ZMQSocket($context, ZMQ::SOCKET_REQ);
@@ -189,27 +196,104 @@ Route::get('/AddMaster',function(){
     $data=Request::input("data");
     $result = "添加失败！";
     //先查询是否存在
-    $data=DB::select('select count(*) from tiger.user where mt4_real=?',[$data]);
-    if ($data!=null)
+    $da=DB::select('select count(*) from tiger.user where mt4_real=? || phone=? || email=?',[$data,$data,$data]);
+    if (isset($da))
     {
-        $a= DB::select("SELECT mt4_id, SUM(`profit`+`storage`) AS profit_rate, COUNT(*) AS total_orders, SUM((close_price - open_price) * pow(10, digits -3) * ((cmd % 2) * -2 + 1) * volume * pip_coefficient) AS total_pip FROM tiger.history WHERE mt4_id=? AND `comment` <> \"cancelled\" GROUP BY `mt4_id` ORDER BY profit_rate",[500001]);
-        $profit_rate=$a->profit_rate;
-        $total_orders=$a->total_orders;
-        $total_pip=$a->total_pip;
-        $rate = DB::select("SELECT amount FROM payment WHERE mt4_id=? AND status = 4 LIMIT 1",[$data->mt4_real]);
-        $ret = 0.0;
-        if ($rate == null && and $rate!=0)
-            $ret = $rate->amount / 10000;
-        else{
-            $ret = $rate /$rate;
+        $a= DB::select("SELECT mt4_id, SUM(`profit`+`storage`) AS profit_rate, COUNT(*) AS total_orders, SUM((close_price - open_price) * pow(10, digits -3) * ((cmd % 2) * -2 + 1) * volume * pip_coefficient) AS total_pip FROM tiger.history WHERE mt4_id=? AND `comment` <> \"cancelled\" GROUP BY `mt4_id` ORDER BY profit_rate",[$data]);
+        $profit_rate=0.00;
+        if ($a!=null) {
+            $profit_rate=$a[0]->profit_rate;
         }
-       
-        //rank 
-        //copycount
-        //copyamount
-        //maxretract
-        //totalprofit
-        //type
+        $total_orders=0.00;
+        if ($total_orders!=null) {
+            $total_orders=$a[0]->total_orders;
+        }
+        $total_pip=0.00;
+        if ($total_pip!=null) {
+            $total_pip=$a[0]->total_pip;
+        }
+        $rate = DB::select("SELECT amount FROM payment WHERE mt4_id=? AND status = 4 LIMIT 1",[$data]);
+        $ret = 0.0;
+        if ($rate!=null){
+            if($rate[0]->amount!=0){
+                $ret = $profit_rate / 10000;
+            }else{
+                 $ret = $profit_rate /$rate[0]->amount;
+            }
+        }    
+        else{
+              $ret = $profit_rate / 10000;
+        }
+        $count=DB::select("SELECT COUNT(*) AS profitable_count FROM history WHERE mt4_id = ? AND `profit` + `storage` > 0",[$data]);
+        $profitable_count=0.00;
+        if($count!=null) {
+           $profitable_count=$count[0]->profitable_count;
+        }
+        $uinfo=DB::select("SELECT * FROM user WHERE mt4_real = ?",[$data]);
+        $username="";
+        $sex=0;
+        $usercod=0;
+        if ($uinfo!=null) {
+            $username=$uinfo[0]->username;
+            $usercode=$uinfo[0]->user_code;
+            $sex=$uinfo[0]->sex;
+        }
+        $percent_profitable = 0.0;
+        if ($total_orders != 0){
+             $percent_profitable = $profitable_count / $total_orders;
+        }
+          
+
+        //rank         排名
+        //copycount    跟单人数
+        //copyamount   跟单金额
+        //maxretract   最大回撤=浮动盈亏/总盈利
+        //totalprofit  总收益
+        //type         交易类型
+
+        $context = new ZMQContext();
+        $order=null;
+        $orders= DB::select("select order_id,mt4_id from `order` where mt4_id=? and cmd=0 || cmd=1",[$data]);
+        if ($orders!=null) {
+           $arr=null;
+           foreach ($orders as $key => $value) {
+           $arr.=strval($value->order_id).',';
+           }
+          $order= rtrim($arr, ",");  //以，分隔的order字符串 
+        }
+        // Connect to task ventilator
+        $sender = new ZMQSocket($context, ZMQ::SOCKET_REQ);
+        $sender->connect("tcp://169.54.231.244:1990");
+        $sender->send("{'from_mt4':$data,'to_mt4':null,'orders':$order,'__api':'CopyStatisticsInfo'}");
+        $recv= $sender->recv(); 
+        $copyamount=0.00;
+        $copycount=0;
+        $Maxretract=0.00;
+        if($recv!=null) {
+           $array=json_decode($recv);
+           $copyamount=$array->Totalamount==null?0.00:$array->Totalamount;
+           $copycount=$array->Totalnum;
+           $Maxretract=$array->Maxretract;
+        }
+        $file_contents = file_get_contents("https://i.tigerwit.com/api/v2/summary_report_noauth?cros_user=$usercode&period=360&tiger_source=real");
+        $totalprofit=0.00;
+        $json=json_decode($file_contents);
+        if ($json!=null) {
+            if ($json->is_succ==true) {
+                $totalprofit=$json->total_profit_rate;
+            }else{
+                    $totalprofit=0.00;
+            }
+        }
+        $type=1;//默认值
+        $rank=100;//默认值
+        //插入                          
+        $date= date('Y-m-d');
+        $i=DB::insert("INSERT INTO master_new(`date`,`username`,`sex`,`orders`, `profit_rate`,`pips`, `percent_profitable`, `mt4_id`, `period`,rank,copycount,copyamount,maxretract,totalprofit,`type`,`status`) VALUES('$date','$username', $sex, $total_orders, $ret, $total_pip, $percent_profitable, $data, 7, $rank, $copycount, $copyamount, $Maxretract, $totalprofit, $type,0)");
+        //echo "INSERT INTO master_new(`date`,`username`,`sex`,`orders`, `profit_rate`,`pips`, `percent_profitable`, `mt4_id`, `period`,rank,copycount,copyamount,maxretract,totalprofit,`type`) VALUES(date("Y-m-d"),$username, $sex, $total_orders, $ret, $total_pip, $percent_profitable, $data, 7, $rank, $copycount, $copyamount, $Maxretract, $totalprofit, $type)";
+        if ($i>0) {
+           $result="已添加高手到排行榜！";
+        }
     }
     return $result;
 });
