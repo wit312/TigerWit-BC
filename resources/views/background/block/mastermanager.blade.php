@@ -52,6 +52,7 @@
                                     if (e == 'true') {
                                           $('#modal-6').modal('hide');
                                         Myalert('modal-5',"成功修改！");
+                                         Reload();
                                     } else {
                                         //修改失败
                                           $('#modal-6').modal('hide');
@@ -97,10 +98,10 @@
                             　　for(var model in e){
                                     if (e[model]["status"]==0) {
                                         ++tbindex;      
-                                    $("#Tb").append('<tr> <td>'+tbindex+'</td> <td>'+e[model]["mt4_id"]+'</td> <td>'+e[model]["username"]+'</td> <td>'+e[model]["rank"]+'</td> <td>'+e[model]["six_rate"]+'</td><td>'+e[model]["win"]+'</td><td>'+e[model]["lose"]+'</td><td>'+e[model]["volunm"]+'</td>  <td><a href="#" onclick="Edit('+e[model]["mt4_id"]+')" class="btn btn-secondary btn-sm btn-icon icon-left">Edit</a> <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
+                                    $("#Tb").append('<tr> <td>'+e[model]["rank"]+'</td> <td>'+e[model]["mt4_id"]+'</td> <td>'+e[model]["username"]+'</td> <td>'+e[model]["six_rate"]+'</td><td>'+e[model]["win"]+'</td><td>'+e[model]["lose"]+'</td><td>'+e[model]["volunm"]+'</td>  <td><a href="#" onclick="Edit('+e[model]["mt4_id"]+')" class="btn btn-secondary btn-sm btn-icon icon-left">Edit</a> <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
                                     }else if(e[model]["status"]==1){
                                         ++tb1index;      
-                                    $("#Tb_1").append('<tr> <td>'+tb1index+'</td> <td>'+e[model]["mt4_id"]+'</td> <td>'+e[model]["username"]+'</td> <td>'+e[model]["rank"]+'</td> <td>'+e[model]["six_rate"]+'</td><td>'+e[model]["win"]+'</td><td>'+e[model]["lose"]+'</td><td>'+e[model]["volunm"]+'</td>   <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
+                                    $("#Tb_1").append('<tr> <td>'+e[model]["rank"]+'</td> <td>'+e[model]["mt4_id"]+'</td> <td>'+e[model]["username"]+'</td>  <td>'+e[model]["six_rate"]+'</td><td>'+e[model]["win"]+'</td><td>'+e[model]["lose"]+'</td><td>'+e[model]["volunm"]+'</td>   <a href="#" class="btn btn-danger btn-sm btn-icon icon-left" onclick="Remove('+e[model]["mt4_id"]+')">Delete</a></td> </tr>');
                                     }
                                 }
                         }
@@ -180,9 +181,6 @@
 
                                 <div class="form-group">
                                     <button id="btn_click" class="btn btn-secondary btn-single"> 添 加 </button>
-                                     <button onclick="Remove(500015);"  class="btn btn-secondary btn-single"> 测 试 </button>
-                                    
-
                                 </div>
                                 
                             </form>
@@ -244,10 +242,9 @@
             <table class="table table-model-2 table-hover" id="example-3">
                 <thead>
                 <tr>
-                    <th>序号</th>
+                    <th>排名</th>
                     <th>MT4账号</th>
                     <th>昵称</th>
-                    <th>排名<th>
                     <th>近6个月盈利率</th>
                     <th>盈利率占比</th>
                     <th>亏损占比</th>
@@ -301,10 +298,9 @@
             <table class="table table-model-2 table-hover" id="example-3">
                 <thead>
                 <tr>
-                    <th>序号</th>
+                    <th>排名</th>
                     <th>MT4账号</th>
                     <th>昵称</th>
-                    <th>排名<th>
                     <th>近6个月盈利率</th>
                     <th>盈利率占比</th>
                     <th>亏损占比</th>

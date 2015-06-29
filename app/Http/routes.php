@@ -24,6 +24,9 @@ Route::get('/userdetail','BackGroundController@userdetail');
 
 Route::get('/mastermanager','BackGroundController@mastermanager');
 
+Route::get('/updategroup','BackGroundController@updategroup');
+
+Route::get('/updateparity','BackGroundController@updateparity');
 
 
 Route::get('/test',function(){
@@ -147,7 +150,7 @@ Route::get('/GetMasterTypeList',function(){
             $context = new ZMQContext();
             $sender = new ZMQSocket($context, ZMQ::SOCKET_REQ);
             $sender->connect("tcp://169.54.231.244:1990");
-            $sender->send("{'mt4UserID':+$model->mt4_id+,'__api':'Equity'}");
+            $sender->send("{'mt4UserID':$model->mt4_id,'__api':'Equity'}");
             $recv=$sender->recv();
             if ($recv!=null) {
                 $model->volunm= json_decode($recv)->balance;
@@ -323,7 +326,6 @@ Route::get('/AddMaster',function(){
 Route::get('/RemoveMaster',function(){
     $mt4_id=Request::input("mt4_id");
     $result = "删除失败！";
-    return "true";
     if ($mt4_id!=null) {
         $data = DB::select('select * from tiger.master_new where mt4_id=?',[$mt4_id]);
         if($data!=null) {
@@ -338,6 +340,41 @@ Route::get('/RemoveMaster',function(){
 });
 
 
+Route::get('/ChangeGroup',function(){
+    $mt4_id=Request::input("mt4_id");
+    $group=Request::input("group");
+    $result = "修改失败！";
+    if ($mt4_id!=null && $group!=null) {
+        $context = new ZMQContext();
+        $sender = new ZMQSocket($context, ZMQ::SOCKET_REQ);
+        $sender->connect("tcp://169.54.231.244:1990");
+        $sender->send("{'mt4_id':$mt4_id,'group_name':'$group','__api':'ChangeGroup'}");
+        $recv= $sender->recv(); 
+        if ($recv!=null) {
+
+            $array=json_decode($recv);
+            $result=$array->error_msg;
+            if ($array->is_succ) {
+               return "true";
+            }
+        }
+    }
+    return $result;
+});
+
+
+Route::get('/ChangeParity',function(){
+    $parity=Request::input("parity");
+    $result = "修改失败！";
+    if($parity!=null){
+        $i=0;
+        $i=DB::update('UPDATE `options` SET `value` =? WHERE `key` =?',[$parity,'USDCNY']);
+        if ($i>0) {
+           $result="true";
+        }
+    }
+    return $result;
+});
 
 
 function isMobile($value,$match='/^[(86)|0]?(13\d{9})|(14\d{9})|(15\d{9})|(17\d{9})|(18\d{9})$/'){

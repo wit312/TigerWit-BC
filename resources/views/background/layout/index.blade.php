@@ -733,30 +733,48 @@ Terms of Service
 									<span class="title">高手推荐管理</span>
 								</a>
 							</li>
+							
 							<li>
-								<a href="#">
-									<i class="entypo-flow-line"></i>
-									<span class="title">解绑手机号码</span>
-								</a>
-							</li>
-							<li>
-							<a href="#">
+							<a href="/mastermanager">
 									<i class="entypo-flow-line"></i>
 									<span class="title">高手榜单管理</span>
 								</a>
 							</li>
 							<li>
-							<a href="#">
+							<a href="/mastertype">
 									<i class="entypo-flow-line"></i>
 									<span class="title">高手类型管理</span>
 								</a>
 							</li>
-							<li>
-							<a href="#">
-									<i class="entypo-flow-line"></i>
-									<span class="title">用户明细查询</span>
-								</a>
-							</li>
+                            <li>
+                                <a href="/unwraptel">
+                                    <i class="entypo-flow-line"></i>
+                                    <span class="title">解绑手机号码</span>
+                                </a>
+                            </li>
+
+                            <li>
+                            <a href="/updategroup">
+                                    <i class="entypo-flow-line"></i>
+                                    <span class="title">修改组</span>
+                                </a>
+                            </li>
+                            
+                             <li>
+                            <a href="updateparity">
+                                    <i class="entypo-flow-line"></i>
+                                    <span class="title">修改入金汇率</span>
+                                </a>
+                            </li>
+
+                              <li>
+                            <a href="#">
+                                    <i class="entypo-flow-line"></i>
+                                    <span class="title">开户审核</span>
+                                </a>
+                            </li>
+
+
 						</ul>
 					</li>
 				</ul>
