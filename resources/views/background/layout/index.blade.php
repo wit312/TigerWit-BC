@@ -1786,7 +1786,7 @@ Converted Sales
                 $('#'+param+'').modal('show', {backdrop: 'fade'});
                 setTimeout(function(){
                     $('#'+param+'').modal('hide');
-                }, 1000);
+                }, 2000);
             }
         </script>
 
@@ -1879,21 +1879,10 @@ Converted Sales
 </div>
 <!-- end: Chat Section -->
 
-
+</div>
 </div>
 
 
-        <!-- Modal 1 (Basic)
-        <div class="modal fade" id="modal-1" style="width: auto">
-            <div class="modal-dialog">
-                <div class="col-md-6">
-                <div class="alert alert-success">
-                    <strong>温馨提示</strong>       操作成功！
-                </div>
-                </div>
-            </div>
-        </div>
-        -->
         <div class="modal fade custom-width" id="modal-1">
             <div class="modal-dialog" style="width: 60%;">
                 <div class="col-md-6">
@@ -1905,20 +1894,11 @@ Converted Sales
         </div>
 
 
-        <!-- Modal 6 (Long Modal)-->
-        <div class="modal fade" id="modal-6">
-            <div class="modal-dialog">
-                <div class="modal-content">
+      
 
-                            <div class="col-md-6">
-                                <div class="alert alert-success">
-                                    <strong>温馨提示</strong>       操作成功！
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+
+
 
 
     <!-- Modal 5 (Long Modal)-->
@@ -1931,6 +1911,64 @@ Converted Sales
                       </div>
           </div>
       </div>
+
+
+<!-- Modal 6 (Long Modal)-->
+    <div class="modal fade" id="modal-6">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Master Info</h4>
+                </div>
+                
+                <div class="modal-body">
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            
+                            <div class="form-group">
+                                <label for="field-1" class="control-label">Update Rank:</label>
+                                
+                                <input type="text" class="form-control" id="rank" placeholder="添入名次">
+                            </div>  
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info" id="save">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal 4 (Confirm)-->
+    <div class="modal fade" id="modal-4" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm</h4>
+                </div>
+                
+                <div class="modal-body">
+                
+                   <strong>继续吗？</strong>
+                    
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" id="btn_Confirm" data-dismiss="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 <div class="page-loading-overlay">

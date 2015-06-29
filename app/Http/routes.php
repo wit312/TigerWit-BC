@@ -114,7 +114,7 @@ Route::get('/RemoveMasterList', function () {
 });
 
 Route::get('/GetMasterTypeList',function(){
-    $data = DB::select('select * from tiger.master_new');
+    $data = DB::select('select * from tiger.master_new order by rank asc');
     if($data!=null) {
             //当前时间 
             $now=date('Y-m-d H:i:s'); 
@@ -194,12 +194,14 @@ Route::get('/UpdateMasterType',function(){
 
 Route::get('/AddMaster',function(){
     $data=Request::input("data");
+    $argtype=Request::input("argtype");
     $result = "添加失败！";
     //先查询是否存在
-    $da=DB::select('select count(*) from tiger.user where mt4_real=? || phone=? || email=?',[$data,$data,$data]);
-    if (isset($da))
+    $da=DB::select('select * from tiger.user where mt4_real=? || phone=? || email=?',[$data,$data,$data]);
+    if ($da!=null)
     {
-        $a= DB::select("SELECT mt4_id, SUM(`profit`+`storage`) AS profit_rate, COUNT(*) AS total_orders, SUM((close_price - open_price) * pow(10, digits -3) * ((cmd % 2) * -2 + 1) * volume * pip_coefficient) AS total_pip FROM tiger.history WHERE mt4_id=? AND `comment` <> \"cancelled\" GROUP BY `mt4_id` ORDER BY profit_rate",[$data]);
+        $mt4=$da[0]->mt4_real;
+        $a= DB::select("SELECT mt4_id, SUM(`profit`+`storage`) AS profit_rate, COUNT(*) AS total_orders, SUM((close_price - open_price) * pow(10, digits -3) * ((cmd % 2) * -2 + 1) * volume * pip_coefficient) AS total_pip FROM tiger.history WHERE mt4_id=? AND `comment` <> \"cancelled\" GROUP BY `mt4_id` ORDER BY profit_rate",[$mt4]);
         $profit_rate=0.00;
         if ($a!=null) {
             $profit_rate=$a[0]->profit_rate;
@@ -212,7 +214,7 @@ Route::get('/AddMaster',function(){
         if ($total_pip!=null) {
             $total_pip=$a[0]->total_pip;
         }
-        $rate = DB::select("SELECT amount FROM payment WHERE mt4_id=? AND status = 4 LIMIT 1",[$data]);
+        $rate = DB::select("SELECT amount FROM payment WHERE mt4_id=? AND status = 4 LIMIT 1",[$mt4]);
         $ret = 0.0;
         if ($rate!=null){
             if($rate[0]->amount!=0){
@@ -224,12 +226,12 @@ Route::get('/AddMaster',function(){
         else{
               $ret = $profit_rate / 10000;
         }
-        $count=DB::select("SELECT COUNT(*) AS profitable_count FROM history WHERE mt4_id = ? AND `profit` + `storage` > 0",[$data]);
+        $count=DB::select("SELECT COUNT(*) AS profitable_count FROM history WHERE mt4_id = ? AND `profit` + `storage` > 0",[$mt4]);
         $profitable_count=0.00;
         if($count!=null) {
            $profitable_count=$count[0]->profitable_count;
         }
-        $uinfo=DB::select("SELECT * FROM user WHERE mt4_real = ?",[$data]);
+        $uinfo=DB::select("SELECT * FROM user WHERE mt4_real = ?",[$mt4]);
         $username="";
         $sex=0;
         $usercod=0;
@@ -253,7 +255,7 @@ Route::get('/AddMaster',function(){
 
         $context = new ZMQContext();
         $order=null;
-        $orders= DB::select("select order_id,mt4_id from `order` where mt4_id=? and cmd=0 || cmd=1",[$data]);
+        $orders= DB::select("select order_id,mt4_id from `order` where mt4_id=? and cmd=0 || cmd=1",[$mt4]);
         if ($orders!=null) {
            $arr=null;
            foreach ($orders as $key => $value) {
@@ -264,7 +266,7 @@ Route::get('/AddMaster',function(){
         // Connect to task ventilator
         $sender = new ZMQSocket($context, ZMQ::SOCKET_REQ);
         $sender->connect("tcp://169.54.231.244:1990");
-        $sender->send("{'from_mt4':$data,'to_mt4':null,'orders':$order,'__api':'CopyStatisticsInfo'}");
+        $sender->send("{'from_mt4':$mt4,'to_mt4':null,'orders':$order,'__api':'CopyStatisticsInfo'}");
         $recv= $sender->recv(); 
         $copyamount=0.00;
         $copycount=0;
@@ -285,20 +287,55 @@ Route::get('/AddMaster',function(){
                     $totalprofit=0.00;
             }
         }
-        $type=1;//默认值
+        $type=$argtype;
         $rank=100;//默认值
         //插入                          
         $date= date('Y-m-d');
-        $i=DB::insert("INSERT INTO master_new(`date`,`username`,`sex`,`orders`, `profit_rate`,`pips`, `percent_profitable`, `mt4_id`, `period`,rank,copycount,copyamount,maxretract,totalprofit,`type`,`status`) VALUES('$date','$username', $sex, $total_orders, $ret, $total_pip, $percent_profitable, $data, 7, $rank, $copycount, $copyamount, $Maxretract, $totalprofit, $type,0)");
+        $i=DB::insert("INSERT INTO master_new(`date`,`username`,`sex`,`orders`, `profit_rate`,`pips`, `percent_profitable`, `mt4_id`, `period`,rank,copycount,copyamount,maxretract,totalprofit,`type`,`status`) VALUES('$date','$username', $sex, $total_orders, $ret, $total_pip, $percent_profitable, $mt4, 7, $rank, $copycount, $copyamount, $Maxretract, $totalprofit, $type,0)");
         //echo "INSERT INTO master_new(`date`,`username`,`sex`,`orders`, `profit_rate`,`pips`, `percent_profitable`, `mt4_id`, `period`,rank,copycount,copyamount,maxretract,totalprofit,`type`) VALUES(date("Y-m-d"),$username, $sex, $total_orders, $ret, $total_pip, $percent_profitable, $data, 7, $rank, $copycount, $copyamount, $Maxretract, $totalprofit, $type)";
         if ($i>0) {
-           $result="已添加高手到排行榜！";
+           $result="true";
         }
     }
     return $result;
 });
 
 
+ Route::get('/UpdateMaster',function(){
+    $mt4_id=Request::input("mt4_id");
+    $rank=Request::input("rank");
+    $result = "修改失败！";
+    if ($mt4_id!=null && $rank!=null) {
+        $data=DB::select('select count(*) from tiger.user where mt4_real=?',[$mt4_id]);
+        if ($data!=null)
+        {
+           $i=DB::update('update master_new set rank=? where mt4_id=?',[$rank,$mt4_id]);
+           if ($i>0)
+           {
+               $result = "true";
+           }
+        }
+        return $result;
+    }
+ });
+
+
+Route::get('/RemoveMaster',function(){
+    $mt4_id=Request::input("mt4_id");
+    $result = "删除失败！";
+    return "true";
+    if ($mt4_id!=null) {
+        $data = DB::select('select * from tiger.master_new where mt4_id=?',[$mt4_id]);
+        if($data!=null) {
+           $i=DB::select('delete from tiger.master_new where mt4_id=?',[$mt4_id]);
+            if($i>0)
+            {
+                $result="true";
+            }
+        }
+    }
+    return $result;
+});
 
 
 
@@ -308,6 +345,8 @@ function isMobile($value,$match='/^[(86)|0]?(13\d{9})|(14\d{9})|(15\d{9})|(17\d{
     if(empty($v) || strlen($v)>15) return false;
     return preg_match($match,$v);
 }
+
+
 
 function TypeToName($type)
         {
