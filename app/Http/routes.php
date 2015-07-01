@@ -12,7 +12,11 @@ use app\libiray\Common;
 |
 */
 
-Route::get('/BackGround','BackGroundController@index');
+Route::any('/','BackGroundController@index');
+
+Route::any('/home','BackGroundController@index')->before("login");
+
+Route::get('/BackGround','BackGroundController@index')->before("login");
 
 Route::get('/MasterList','BackGroundController@masterrecommend');
 
@@ -24,11 +28,59 @@ Route::get('/userdetail','BackGroundController@userdetail');
 
 Route::get('/mastermanager','BackGroundController@mastermanager');
 
+Route::get('/StatTab','BackGroundController@stat_tab')->before("login");
 
+Route::get('/UserManager','BackGroundController@user_manager')->before("login");
 
 Route::get('/test',function(){
 phpinfo();
 });
+
+// Authentication routes...
+Route::get('auth/login', 'Auth\AuthController@getLogin');
+Route::post('auth/login', 'Auth\AuthController@postLogin');
+Route::get('auth/logout', 'Auth\AuthController@getLogout');
+
+// Registration routes...
+Route::get('auth/register', 'Auth\AuthController@getRegister');
+Route::post('auth/register', 'Auth\AuthController@postRegister');
+
+Route::post('StatTab/Data', 'StatTabController@getStatData');
+// Route::any('StatTab/Data',function(){
+//            $res =  '{
+//     "draw": 2,
+//     "recordsTotal": 2,
+//     "recordsFiltered": 4,
+//     "data": [
+//         {
+//             "name": "Angelica",
+//             "name1": "Ramos",
+//             "name2": "System Architect",
+//             "name3": "London",
+//             "name4": "9th Oct 09",
+//             "name5": "$2,875"
+//         },
+//         {
+//             "name": "Angelica1",
+//             "name1": "Ramos",
+//             "name2": "System Architect",
+//             "name3": "London1",
+//             "name4": "9th Oct 09",
+//             "name5": "$2,875"
+//         },
+//         {
+//             "name": "Angelica2",
+//             "name1": "Ramos",
+//             "name2": "System Architect",
+//             "name3": "London2",
+//             "name4": "9th Oct 09",
+//             "name5": "$2,875"
+//         }
+//     ]
+// }';
+// return $res;
+// });
+
 
 Route::get('/unwrap_phone',function(){
     $phone = Request::input('phone');
@@ -58,23 +110,28 @@ Route::get('/AddMasterList', function () {
     $data = Request::input('data');
     $result="插入失败！请先填写个人说明！";
     $users = DB::select('select username,user_code,mt4_real,`desc` from tiger.user where mt4_real=? limit 1', [$data]);
-    $desc= $users[0]->desc;
-    if($desc!=null)
+    if(!empty($users) && $users!=0)
     {
-        //历史数据
-        $dic=DB::select('select * from tiger.recommend where mt4_id=? and type=?', [$data,$type]);
-        if($dic==null)
+        $desc= $users[0]->desc;
+        if($desc!=null)
         {
-            $i=DB::select('insert into tiger.recommend(mt4_id, `type`,`desc`) values(?,?,?)', [$data,$type,$desc]);
-            if($i>0)
+            //历史数据
+            $dic=DB::select('select * from tiger.recommend where mt4_id=? and type=?', [$data,$type]);
+            if($dic==null)
             {
-                //成功
-                $result="true";
+                $i=DB::select('insert into tiger.recommend(mt4_id, `type`,`desc`) values(?,?,?)', [$data,$type,$desc]);
+                if($i>0)
+                {
+                    //成功
+                    $result="true";
+                }
+            }else
+            {
+                $result="已有相同项！";
             }
-        }else
-        {
-            $result="已有相同项！";
         }
+    }else{
+        $result="M T 4 I D :".$data."不存在！请先注册！";
     }
     return $result;
 });
@@ -145,6 +202,15 @@ Route::get('/UpdateMasterType',function(){
        }
     }
     return $result;
+});
+
+Route::filter("login",function()
+{
+    if(!Auth::check())
+    {
+        Auth::logout();
+        return Redirect::to('auth/login')->with('message','请先登录!');
+    }  
 });
 
 function isMobile($value,$match='/^[(86)|0]?(13\d{9})|(14\d{9})|(15\d{9})|(17\d{9})|(18\d{9})$/'){

@@ -1,4 +1,4 @@
-
+<?php $user = Session::get('user'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +9,7 @@
 	<meta name="description" content="Xenon Boostrap Admin Panel" />
 	<meta name="author" content="" />
 
-	<title>Xenon - Blank Page - Static Sidebar</title>
+	<title>@yield('title', '后台管理')</title>
 
 	<link rel="stylesheet" href="http://fonts.useso.com/css?family=Arimo:400,700,400italic">
 	<link rel="stylesheet" href="assets/css/fonts/linecons/css/linecons.css">
@@ -20,7 +20,7 @@
 	<link rel="stylesheet" href="assets/css/xenon-components.css">
 	<link rel="stylesheet" href="assets/css/xenon-skins.css">
 	<link rel="stylesheet" href="assets/css/custom.css">
-
+	
 	<script src="assets/js/jquery-1.11.1.min.js"></script>
 
 
@@ -58,7 +58,7 @@
 						<div class="user-details">
 
 							<h3>
-								<a href="extra-profile.html">John Smith</a>
+								<a href="extra-profile.html">{{ $user->name }}</a>
 
 								<!-- Available statuses: is-online, is-idle, is-busy and is-offline -->
 								<span class="user-status is-online"></span>
@@ -757,6 +757,12 @@ Terms of Service
 									<span class="title">用户明细查询</span>
 								</a>
 							</li>
+							<li>
+							<a href="/StatTab">
+									<i class="entypo-flow-line"></i>
+									<span class="title">客户来源</span>
+								</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -1043,40 +1049,34 @@ last week
 						<a href="#" data-toggle="dropdown">
 							<img src="assets/images/user-4.png" alt="user-image" class="img-circle img-inline userpic-32" width="28" />
 							<span>
-Arlind Nushi
+								{{ $user->name }}
 <i class="fa-angle-down"></i>
 							</span>
 						</a>
 
 						<ul class="dropdown-menu user-profile-menu list-unstyled">
 							<li>
-								<a href="#edit-profile">
-									<i class="fa-edit"></i>
-New Post
-								</a>
-							</li>
-							<li>
 								<a href="#settings">
 									<i class="fa-wrench"></i>
-Settings
+设置
 								</a>
 							</li>
 							<li>
 								<a href="#profile">
 									<i class="fa-user"></i>
-Profile
+简介
 								</a>
 							</li>
 							<li>
 								<a href="#help">
 									<i class="fa-info"></i>
-Help
+帮助
 								</a>
 							</li>
 							<li class="last">
-								<a href="extra-lockscreen.html">
+								<a href="auth/logout">
 									<i class="fa-lock"></i>
-Logout
+注销									
 								</a>
 							</li>
 						</ul>

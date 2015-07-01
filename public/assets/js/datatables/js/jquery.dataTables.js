@@ -2640,6 +2640,7 @@
 	
 		// Compatibility with 1.9-. In order to read from aaData, check if the
 		// default has been changed, if not, check for aaData
+
 		if ( dataSrc === 'data' ) {
 			return json.aaData || json[dataSrc];
 		}
@@ -3211,6 +3212,7 @@
 					var aData = _fnAjaxDataSrc( settings, json );
 	
 					// Got the data - add it to the table
+					
 					for ( i=0 ; i<aData.length ; i++ ) {
 						_fnAddData( settings, aData[i] );
 					}
@@ -5107,7 +5109,7 @@
 			$(settings.nTable).trigger( e+'.dt', args );
 		}
 		
-		console.log( e );
+		// console.log( e );
 	
 		return ret;
 	}
@@ -10735,7 +10737,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sSortAscending": ": activate to sort column ascending",
+				"sSortAscending": ": 升序",
 	
 				/**
 				 * ARIA label that is added to the table headers when the column may be
@@ -10758,7 +10760,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sSortDescending": ": activate to sort column descending"
+				"sSortDescending": ": 降序"
 			},
 	
 			/**
@@ -10788,7 +10790,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sFirst": "First",
+				"sFirst": "首页",
 	
 	
 				/**
@@ -10811,7 +10813,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sLast": "Last",
+				"sLast": "尾页",
 	
 	
 				/**
@@ -10834,7 +10836,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sNext": "Next",
+				"sNext": "下一页",
 	
 	
 				/**
@@ -10857,7 +10859,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sPrevious": "Previous"
+				"sPrevious": "上一页"
 			},
 	
 			/**
@@ -10880,7 +10882,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No data available in table",
+			"sEmptyTable": "报表无数据",
 	
 	
 			/**
@@ -10912,7 +10914,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+			"sInfo": "显示 _START_ 到 _END_ 共计 _TOTAL_ 条",
 	
 	
 			/**
@@ -10933,7 +10935,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoEmpty": "Showing 0 to 0 of 0 entries",
+			"sInfoEmpty": "显示 0 到 0 共计 0 条",
 	
 	
 			/**
@@ -10955,7 +10957,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoFiltered": "(filtered from _MAX_ total entries)",
+			"sInfoFiltered": "(从 _MAX_ 条中筛选)",
 	
 	
 			/**
@@ -11073,7 +11075,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sLengthMenu": "Show _MENU_ entries",
+			"sLengthMenu": "显示 _MENU_ 条",
 	
 	
 			/**
@@ -11097,7 +11099,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sLoadingRecords": "Loading...",
+			"sLoadingRecords": "加载中...",
 	
 	
 			/**
@@ -11118,7 +11120,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sProcessing": "Processing...",
+			"sProcessing": "处理中...",
 	
 	
 			/**
@@ -11153,7 +11155,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sSearch": "Search:",
+			"sSearch": "查询:",
 	
 	
 			/**
@@ -11211,7 +11213,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sZeroRecords": "No matching records found"
+			"sZeroRecords": "未找到匹配记录"
 		},
 	
 	

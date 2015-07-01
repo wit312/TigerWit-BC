@@ -1,0 +1,31 @@
+{
+    "draw": 2,
+    "recordsTotal": 2,
+    "recordsFiltered": 4,
+    "data": [
+        {
+            "Angelica",
+            "Ramos",
+            "System Architect",
+            "London",
+            "9th Oct 09",
+            "$2,875"
+        },
+        {
+            "Angelica1",
+            "Ramos",
+            "System Architect",
+            "London",
+            "9th Oct 09",
+            "$2,875"
+        },
+        {
+            "Angelica2",
+            "Ramos",
+            "System Architect",
+            "London",
+            "9th Oct 09",
+            "$2,875"
+        }
+    ]
+}

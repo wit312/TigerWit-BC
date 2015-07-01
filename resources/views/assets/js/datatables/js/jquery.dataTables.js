@@ -5107,7 +5107,7 @@
 			$(settings.nTable).trigger( e+'.dt', args );
 		}
 		
-		console.log( e );
+		// console.log( e );
 	
 		return ret;
 	}
@@ -10735,7 +10735,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sSortAscending": ": activate to sort column ascending",
+				"sSortAscending": ": 升序",
 	
 				/**
 				 * ARIA label that is added to the table headers when the column may be
@@ -10758,7 +10758,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sSortDescending": ": activate to sort column descending"
+				"sSortDescending": ": 降序"
 			},
 	
 			/**
@@ -10788,7 +10788,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sFirst": "First",
+				"sFirst": "首页",
 	
 	
 				/**
@@ -10811,7 +10811,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sLast": "Last",
+				"sLast": "尾页",
 	
 	
 				/**
@@ -10834,7 +10834,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sNext": "Next",
+				"sNext": "下一页",
 	
 	
 				/**
@@ -10857,7 +10857,7 @@
 				 *      } );
 				 *    } );
 				 */
-				"sPrevious": "Previous"
+				"sPrevious": "上一页"
 			},
 	
 			/**
@@ -10880,7 +10880,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No data available in table",
+			"sEmptyTable": "报表无数据",
 	
 	
 			/**
@@ -10912,7 +10912,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+			"sInfo": "显示 _START_ 到 _END_ 共计 _TOTAL_ 行",
 	
 	
 			/**
@@ -11073,7 +11073,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sLengthMenu": "Show _MENU_ entries",
+			"sLengthMenu": "显示 _MENU_ 行",
 	
 	
 			/**
@@ -11153,7 +11153,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sSearch": "Search:",
+			"sSearch": "查询:",
 	
 	
 			/**

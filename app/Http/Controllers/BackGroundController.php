@@ -36,5 +36,14 @@ class BackGroundController extends Controller
     {
         return view('background.block.mastermanager');
     }
-
+    //客户来源
+    public function stat_tab()
+    {
+        return view('background.block.stat_tab');
+    }
+    //用户管理
+    public function user_manager()
+    {
+        return view('background.block.user_manager');
+    }
 }
