@@ -24,19 +24,19 @@
                     data=mt4_id;
                   }
                   if (data!=null && argtype!=null) {
-                    $.ajax({
-                        type: 'GET',
-                        url: '/AddMaster',
-                        data:{data:data,argtype:argtype},
-                        success: function (e) {
-                                if (e=='true') {
-                                    Myalert('modal-5','操作成功！'); 
-                                    Reload();
-                                }else{
-                                    Myalert('modal-5','操作失败！'); 
-                                }
-                        }
-                  });
+                        $.ajax({
+                            type: 'GET',
+                            url: '/AddMaster',
+                            data:{data:data,argtype:argtype},
+                            success: function (e) {
+                                    if (e=='true') {
+                                        Myalert('modal-5','操作成功！'); 
+                                        Reload();
+                                    }else{
+                                        Myalert('modal-5','操作失败！'); 
+                                    }
+                            }
+                      });
                   };
                   
               });

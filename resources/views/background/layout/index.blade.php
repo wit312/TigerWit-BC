@@ -761,14 +761,14 @@ Terms of Service
                             </li>
                             
                              <li>
-                            <a href="updateparity">
+                            <a href="/updateparity">
                                     <i class="entypo-flow-line"></i>
                                     <span class="title">修改入金汇率</span>
                                 </a>
                             </li>
 
                               <li>
-                            <a href="#">
+                            <a href="/verifyuser">
                                     <i class="entypo-flow-line"></i>
                                     <span class="title">开户审核</span>
                                 </a>
@@ -1982,6 +1982,43 @@ Converted Sales
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info" id="btn_Confirm" data-dismiss="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <!-- Modal 2 (Custom Width)-->
+    <div class="modal fade custom-width" id="modal-2">
+        <div class="modal-dialog" style="width: 30%;">
+            <div class="modal-content">
+                
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><strong>提示</strong></h4>
+                </div>
+                
+                <div class="modal-body">
+                <div class="form-group">
+                    <strong>是否<span id="verify_text">通过</span>此开户申请</strong>
+                    </div>
+                    <input type="text" style="display:none" id="bag">
+                    <div class="form-group">
+                    <select class="form-control" id="verify_select" style="display: none;">
+                                        <option value="证件不清晰">证件不清晰</option>
+                                        <option value="证件超有效期">证件超有效期</option>
+                                        <option value="其他">其他</option>
+
+                    </select>
+                    </div>
+                    <div class="form-group" >
+                    <input type="text" id="verify_reason" class="form-control" size="25" placeholder="其他理由" ">
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" id="Confirm_verify">确认</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>

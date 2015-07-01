@@ -47,4 +47,8 @@ class BackGroundController extends Controller
     {
         return view('background.block.updateparity');
     }
+    //用户开户审核
+    public function verifyuser(){
+        return view('background.block.verifyuser');
+    }
 }

@@ -28,6 +28,8 @@ Route::get('/updategroup','BackGroundController@updategroup');
 
 Route::get('/updateparity','BackGroundController@updateparity');
 
+Route::get('/verifyuser','BackGroundController@verifyuser');
+
 
 Route::get('/test',function(){
 //$context = new ZMQContext();
@@ -372,6 +374,51 @@ Route::get('/ChangeParity',function(){
         if ($i>0) {
            $result="true";
         }
+    }
+    return $result;
+});
+
+
+
+Route::get('/GetUserVerifyList',function(){
+        $data=DB::select('select * from tiger.user where id_front is not null and id_back is not null');
+        return $data;
+});
+
+
+Route::get('/UpdateUserVerify',function(){
+    $isverify=Request::input("isverify");
+    $user_code=Request::input("user_code");
+    $verifyinfo=Request::input("verifyinfo");
+    $result="操作失败！";
+    if ($isverify!=null && $user_code!=null) {
+        if ($isverify==1) {
+            $i=0;
+            $i=DB::select('update tiger.user set verified=? where user_code=?',[$isverify,$user_code]);
+            if ($i>0) {
+                $result="true";
+            }
+        }else if($isverify==-1 && $verifyinfo!=null){
+            $i=0;
+            $i=DB::select('update tiger.user set verified=?,verifyinfo=? where user_code=?',[$isverify,$verifyinfo,$user_code]);
+            if ($i>0) {
+                $result="true";
+            }
+        }
+    }
+    return $result;
+});
+
+
+Route::get('/AgainUserVerify',function(){
+    $user_code=Request::input("user_code");
+    $result="操作失败！";
+     if ($user_code!=null) {
+            $i=0;
+            $i=DB::select('update tiger.user set verified=? where user_code=?',[0,$user_code]);
+            if ($i>0) {
+                $result="true";
+            }
     }
     return $result;
 });
