@@ -36,6 +36,7 @@ class BackGroundController extends Controller
     {
         return view('background.block.mastermanager');
     }
+
     //客户来源
     public function stat_tab()
     {
@@ -45,5 +46,20 @@ class BackGroundController extends Controller
     public function user_manager()
     {
         return view('background.block.user_manager');
+    }
+    //修改用户组
+    public function updategroup()
+    {
+        return view('background.block.updategroup');
+    }
+    //修改入金汇率
+     public function updateparity()
+    {
+        return view('background.block.updateparity');
+    }
+    //用户开户审核
+    public function verifyuser(){
+        return view('background.block.verifyuser');
+
     }
 }
