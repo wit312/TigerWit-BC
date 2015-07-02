@@ -12,7 +12,7 @@ use app\libiray\Common;
 |
 */
 
-Route::any('/','BackGroundController@index');
+Route::any('/','BackGroundController@index')->before("login");
 
 Route::any('/home','BackGroundController@index')->before("login");
 
@@ -54,50 +54,15 @@ Route::get('/test',function(){
 });
 
 // Authentication routes...
-Route::get('auth/login', 'Auth\AuthController@getLogin');
-Route::post('auth/login', 'Auth\AuthController@postLogin');
-Route::get('auth/logout', 'Auth\AuthController@getLogout');
+Route::get('auth/login', 'Auth\AuthUserController@getLogin');
+Route::post('auth/login', 'Auth\AuthUserController@postLogin');
+Route::get('auth/logout', 'Auth\AuthUserController@getLogout');
 
 // Registration routes...
-Route::get('auth/register', 'Auth\AuthController@getRegister');
-Route::post('auth/register', 'Auth\AuthController@postRegister');
+Route::get('auth/register', 'Auth\AuthUserController@getRegister');
+Route::post('auth/register', 'Auth\AuthUserController@postRegister');
 
 Route::post('StatTab/Data', 'StatTabController@getStatData');
-// Route::any('StatTab/Data',function(){
-//            $res =  '{
-//     "draw": 2,
-//     "recordsTotal": 2,
-//     "recordsFiltered": 4,
-//     "data": [
-//         {
-//             "name": "Angelica",
-//             "name1": "Ramos",
-//             "name2": "System Architect",
-//             "name3": "London",
-//             "name4": "9th Oct 09",
-//             "name5": "$2,875"
-//         },
-//         {
-//             "name": "Angelica1",
-//             "name1": "Ramos",
-//             "name2": "System Architect",
-//             "name3": "London1",
-//             "name4": "9th Oct 09",
-//             "name5": "$2,875"
-//         },
-//         {
-//             "name": "Angelica2",
-//             "name1": "Ramos",
-//             "name2": "System Architect",
-//             "name3": "London2",
-//             "name4": "9th Oct 09",
-//             "name5": "$2,875"
-//         }
-//     ]
-// }';
-// return $res;
-// });
-
 
 Route::get('/unwrap_phone',function(){
     $phone = Request::input('phone');
